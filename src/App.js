@@ -35,7 +35,7 @@ async function authenticateWithSecret() {
     },
   })
 
-  // Authenticate the DID using the 3ID provider
+  // Authenticate the DID, using the 3ID provider
   await did.authenticate()
 
   // The Ceramic client can create and update streams using the authenticated DID

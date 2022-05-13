@@ -10,13 +10,18 @@ function getPermission(request) {
 }
 
 // `authSecret` must be a 32-byte long Uint8Array
-async function authenticateWithSecret(authSecret) {
+async function authenticateWithSecret() {
+  // `authSecret` must be a 32-byte long Uint8Array
+  const authSecret = new Uint8Array(32);
+  crypto.getRandomValues(authSecret);
+  const authId = 'myAuthId';
+
   // const API_URL = 'http:///localhost:7007';
   // const ceramic = new CeramicClient(API_URL);
   const ceramic = new CeramicClient();
   
   const threeID = await ThreeIdProvider.create({
-    authId: 'myAuthID',
+    authId: authId,
     authSecret,
     // See the section above about permissions management
     getPermission: (request) => Promise.resolve(request.payload.paths),
@@ -41,22 +46,21 @@ async function authenticateWithSecret(authSecret) {
 }
 
 function App() {
-  // `authSecret` must be a 32-byte long Uint8Array
-  const authSecret = new Uint8Array(32);
-  crypto.getRandomValues(authSecret);
-
-  (async() => {
-    let did = await authenticateWithSecret(authSecret);
-    console.log("did = " + did.id);
-  })();
+  this.authenticateWithSecret = this.authenticateWithSecret.bind(this);
 
   return (
     <div className="App">
       <header className="App-header">
         <p>
-          3 ID Provider with Auth and Secret
+          3ID Provider with Auth and Secret
         </p>
       </header>
+      <body>
+      <button type="submit" className="btn btn-info vertical-align-middle" 
+              onClick={this.authenticateWithSecret}>
+        Authenticate
+      </button>
+    </body>
     </div>
   );
 }

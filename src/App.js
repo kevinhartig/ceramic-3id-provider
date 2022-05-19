@@ -27,9 +27,9 @@ export default function App({more, loadMore}) {
                 crypto.getRandomValues(authSecret);
                 const authId = 'myAuthId';
 
-                // const API_URL = 'http:///localhost:7007';
-                // const ceramic = new CeramicClient(API_URL);
-                const ceramic = new CeramicClient();
+                const API_URL = 'http:///localhost:7007';
+                const ceramic = new CeramicClient(API_URL);
+                // const ceramic = new CeramicClient();
 
                 const threeID = await ThreeIdProvider.create({
                     authId: authId,

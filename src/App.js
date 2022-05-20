@@ -5,11 +5,12 @@ import {getResolver as getKeyResolver} from 'key-did-resolver'
 import {getResolver as get3IDResolver} from '@ceramicnetwork/3id-did-resolver'
 import {ThreeIdProvider} from '@3id/did-provider'
 
-export default function App({more, loadMore}) {
+export default function App() {
     // modeled after
     // https://dev.to/alexandrudanpop/correctly-handling-async-await-in-react-components-4h74
 
-    const [ceramic, setCeramic] = useState(null);
+    const [did, setDid] = useState(null);
+    const [count, setCount] = useState(0);
     const componentIsMounted = useRef(true);
 
     useEffect(() => {
@@ -17,7 +18,7 @@ export default function App({more, loadMore}) {
         return () => {
             componentIsMounted.current = false;
         };
-    }, []); // no extra deps => the cleanup function run this on component unmount
+    }, []); // no extra deps => the cleanup function runs this on component unmount
 
     useEffect(() => {
         async function authenticateWithSecret() {
@@ -32,6 +33,7 @@ export default function App({more, loadMore}) {
                 // const ceramic = new CeramicClient();
 
                 const threeID = await ThreeIdProvider.create({
+                    ceramic: ceramic,
                     authId: authId,
                     authSecret,
                     // This grants all permissions
@@ -53,25 +55,25 @@ export default function App({more, loadMore}) {
                 // The Ceramic client can create and update streams using the authenticated DID
                 ceramic.did = did
 
-                if (componentIsMounted.current) {
-                    setCeramic(ceramic);
-                }
+                // if (componentIsMounted.current) {
+                    setDid(did);
+                // }
             } catch (err) {
                 console.error(err);
             }
 
-            console.log("did = " + ceramic);
+            console.log("did = " + did._id);
         }
 
-
         authenticateWithSecret();
-    }, [more]);
-
+    }, [count]);
 
     return (
         <div>
-            <h2>{`"${ceramic}"`}</h2>
-            <button onClick={loadMore}>Authenticate</button>
+            { did && <h2>{did._id}</h2> }
+
+            <button onClick={() => setCount(count+1)}>Authenticate</button>
         </div>
     );
 }
+// `"${ceramic.did}"`

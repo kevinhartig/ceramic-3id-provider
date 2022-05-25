@@ -30,7 +30,6 @@ export default function App() {
 
                 const API_URL = 'http:///localhost:7007';
                 const ceramic = new CeramicClient(API_URL);
-                // const ceramic = new CeramicClient();
 
                 const threeID = await ThreeIdProvider.create({
                     ceramic: ceramic,
@@ -70,7 +69,7 @@ export default function App() {
 
     return (
         <div>
-            { did && <h2>{did._id}</h2> }
+            { did && <h2>{did.id}</h2> }
 
             <button onClick={() => setCount(count+1)}>Authenticate</button>
         </div>
